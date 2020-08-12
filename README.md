@@ -8,7 +8,7 @@ To install all units run `bash install.sh` from project root.
 
 To install individual units run `bash install.sh` from each project folder.
 
-Running Jupyter Notebooks requires token. Token appears in terminal window during **mlbase** unit installation. It also can be obtained by executing `pyton notebook list` directly inside **mlbase** unit.
+Running Jupyter Notebooks requires token. Token appears in terminal window during **mlbase** unit installation. It also can be obtained by executing `jupyter notebook list` directly inside **mlbase** unit.
 
 Connection string to the database from Dashboard `postgresql://postgres:password@10.0.0.200/brave_data`
 

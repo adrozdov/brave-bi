@@ -1,0 +1,11 @@
+.DS_Store
+.vagrant
+.vscode
+
+mlbase/data/*.xlsx
+mlbase/data/*.xls
+mlbase/data/*.csv
+
+mlbase/notebooks/*.ipynb
+
+ml-dashboard/brave-dashboardrelease

@@ -1,0 +1,107 @@
+base:
+  image: ubuntu/xenial
+  location: public
+
+packages:
+  manager: apt
+  system:
+    - software-properties-common
+    - python-software-properties
+    - mc
+    - vim 
+    - git 
+    - build-essential
+    - libssl-dev
+    - libffi-dev
+    - libsasl2-dev
+    - libldap2-dev
+    - libmysqlclient-dev
+    - curl
+    - make
+    - wget
+    - sqlite3 
+    - libsqlite3-dev
+
+copy:
+  - source: brave-dashboard-release/brave
+    target: /root/brave
+
+  - source: brave-dashboard-release/configuration/start.sh
+    target: /root/
+
+  - source: brave-dashboard-release/requirements.txt
+    target: /root/
+
+  - source: brave-dashboard-release/requirements-dev.txt
+    target: /root/
+
+  - source: brave-dashboard-release/setup.py
+    target: /root/
+
+  - source: brave-dashboard-release/brave_config.py
+    target: /root/
+
+  - source: init.sh
+    target: /root/
+    action: |-
+      chmod +x init.sh
+
+  - source: brave-dashboard-release/configuration/dashboard.conf
+    target: /etc/supervisor/conf.d/
+
+run:
+  - command: apt
+    args:
+      - -y
+      - autoremove
+    
+  - command: add-apt-repository
+    args:
+      - 'ppa:deadsnakes/ppa'
+
+  - command: apt
+    args:
+      - update
+
+  - command: apt
+    args:
+      - install
+      - -y
+      - python3.6
+      - python3.6-dev
+      - python3.6-venv
+
+  - command: bash
+    args:
+      - -c
+    content: |-
+      curl -sL https://bootstrap.pypa.io/get-pip.py | sudo -E python3.6
+
+  - command: bash
+    args:
+      - -c
+    content: |-
+      curl -sL https://deb.nodesource.com/setup_11.x | sudo -E bash -
+
+  - command: apt
+    args:
+      - install
+      - -y
+      - nodejs
+
+  - command: bash
+    args:
+      - -c
+    content: |-
+      ./init.sh
+
+service:
+  image: ml-dashboard-1.0
+  name: ml-dashboard
+  version: 1.0
+  ip: 10.0.0.100
+  ports:
+    - 8088:8088
+  resources:
+    ram: 3GB
+    cpu: 1

@@ -1,0 +1,9 @@
+[Unit]
+After=network.service
+
+[Service]
+ExecStart=/bin/bash -c "jupyter-notebook --ip='*' --port=8888 --no-browser --allow-root --notebook-dir=/root/notebooks"
+User=root
+
+[Install]
+WantedBy=default.target

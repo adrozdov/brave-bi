@@ -1,0 +1,19 @@
+name: brave
+trust: brave
+profile: brave
+storage:
+  type: zfs
+  name: brave
+  size: 25GB
+network:
+  bridge: 10.0.0.1
+backendsettings:
+  type: multipass
+  resources:
+    name: brave
+    os: bionic
+    cpu: "2"
+    ram: 8GB
+    hd: 25GB
+    ip: 192.168.64.42
+status: active

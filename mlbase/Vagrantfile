@@ -1,0 +1,38 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  required_plugins = %w( vagrant-vbguest vagrant-disksize )
+    _retry = false
+    required_plugins.each do |plugin|
+        unless Vagrant.has_plugin? plugin
+            system "vagrant plugin install #{plugin}"
+            _retry=true
+        end
+    end
+
+    if (_retry)
+        exec "vagrant " + ARGV.join(' ')
+    end
+
+    config.vm.define "mlbase" do |mlbase|
+        mlbase.vm.box = "ubuntu/bionic64"
+        mlbase.disksize.size = "20GB"
+        mlbase.vm.hostname = "mlbase"
+        mlbase.vm.network "forwarded_port", guest: 8888, host: 8888
+
+        mlbase.vm.provider "virtualbox" do |vb|
+            vb.name = "mlbase"
+            vb.memory = "4192"
+            vb.cpus = 2
+        end
+
+        mlbase.vm.provision "shell", inline: <<-SHELL
+            sudo usermod -aG lxd vagrant
+        SHELL
+        
+    end
+end

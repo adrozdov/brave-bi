@@ -1,0 +1,48 @@
+base:
+  image: ubuntu/xenial
+  location: public
+
+packages:
+  manager: apt
+  system:
+    - wget
+    - vim
+
+copy:
+  - source: install.sh 
+    target: /root/
+    action: |-
+      bash install.sh
+
+service:
+  postdeploy:
+    copy:
+      - source: postgresql.conf
+        target: /etc/postgresql/11/main/
+        action: |-
+          chown postgres:postgres /etc/postgresql/11/main/postgresql.conf
+      - source: pg_hba.conf
+        target: /etc/postgresql/11/main/
+        action: |-
+          chown postgres:postgres /etc/postgresql/11/main/pg_hba.conf
+      - source: postdeploy.sh
+        target: /root/
+        action: |-
+          chmod +x postdeploy.sh
+
+    run:
+      - command: bash
+        args:
+          - -c
+        content: |-
+          ./postdeploy.sh
+
+  image: dashboard-data-1.0    
+  name: dashboard-data
+  version: 1.0
+  ip: 10.0.0.200
+  ports:
+    - 5432:5432
+  resources:
+    ram: 2GB
+    cpu: 1
